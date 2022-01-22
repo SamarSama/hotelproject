@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hotelproject/helperClass/ImportantFun.dart';
 import 'package:hotelproject/models/room.dart';
+import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 class addroomscreen extends StatefulWidget {
   final String text;
   const addroomscreen( {Key? key,required this.text}) : super(key: key);
@@ -18,26 +20,33 @@ class addroomscreen extends StatefulWidget {
 }
 
 class _addroomscreenState extends State<addroomscreen> {
+ late Mainprovider mainprovider;
+
+
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   late firebase_storage.Reference refStorage ;
   TextEditingController bednocon=TextEditingController();
   TextEditingController nightpricecon=TextEditingController();
   TextEditingController roomtypecon=TextEditingController();
-  late FirebaseDatabase database;
-  late FirebaseApp  app;
-  late DatabaseReference base;
+
   File ?imagge;
   ImportantFun importantFun=ImportantFun();
+
   @override
-void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    mainprovider=Provider.of<Mainprovider>(context,listen: false);
     startRealTimeFirebase();
   }
+
+
   void startRealTimeFirebase()async {
-    app = await Firebase.initializeApp();
-    database = FirebaseDatabase(app: app);
-    base = database.reference().child("rooms").child(widget.text.toString());
+
+ await  mainprovider.buildFiirebase("rooms");
+
+    mainprovider.base.child(widget.text.toString());
     refStorage =  storage.ref('/samar_images').child("images");
   }
   Future Pickimage() async {
@@ -226,7 +235,7 @@ void initState() {
                       String HotelId =widget.text.toString();
                       String bedno =bednocon.text.trim() ;
                       String nightprice = nightpricecon.text.trim();
-                      String RoomId = base.push().key;
+                      String RoomId = mainprovider.base.push().key;
                       String roomtype =roomtypecon.text.trim() ;
                       Room rooms=Room(
                           bedNo: bedno,
@@ -237,7 +246,7 @@ void initState() {
                           roomImage: imgUrl
                         // rate: ratingEnd
                       );
-                      base.push().set(rooms.toJson()).whenComplete(() {
+                      mainprovider.base.push().set(rooms.toJson()).whenComplete(() {
                         setState(() {
                           imagge=null;
                         });

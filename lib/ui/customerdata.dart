@@ -6,11 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hotelproject/Models/Drawermodel.dart';
 import 'package:hotelproject/cache_data/cache_data_imp_helper.dart';
+import 'package:hotelproject/main.dart';
 import 'package:hotelproject/models/profile_model2.dart';
 import 'package:hotelproject/models/hotel1.dart';
 import 'package:hotelproject/models/profile_model_respose.dart';
+import 'package:hotelproject/provoder/customer_data_provider.dart';
+import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:hotelproject/ui/open.dart';
 import 'package:hotelproject/ui/userdata_screen.dart';
+import 'package:provider/provider.dart';
 
 import 'hoteldetialsscreen.dart';
 
@@ -23,31 +27,34 @@ class CustomerData extends StatefulWidget {
 
 class _CustomerDataState extends State<CustomerData> {
 
+  late Mainprovider mainprovider;
+  late CustomerDataProvider customerDataProvider;
+
   CacheDataImpHelper cacheDataImpHelper=CacheDataImpHelper();
   var currentPage = 0;
    ProfileModelRespose? ProfileModel;
-  late FirebaseDatabase database;
-  late FirebaseApp app;
-  late DatabaseReference base,userData;
+   late DatabaseReference userData;
   late final uid;
-  List<Hotel1> allHotels = [];
+
   List<Hotel1> searchList = [];
+
+
   void startRealTimeFirebase()async {
-    app  =  await Firebase.initializeApp();
-    database = FirebaseDatabase(app: app);
+await  mainprovider.buildFiirebase("hotel");
+
     //// User user = await auth.currentUser!;
     // uid = user.uid;
     // final uemail = user.email;
-    base =database.reference().child("hotel");
-    base.onChildAdded.listen((event) {
+
+    mainprovider.base.onChildAdded.listen((event) {
       print(event.snapshot.value.toString());
       Hotel1 p=Hotel1.fromJson(event.snapshot.value);
-      allHotels.add(p);
+      customerDataProvider.addNewHotel(p);
       searchList.add(p);
-      setState(() {
-      });
+      // setState(() {
+      // });
     });
-    userData=database.reference().child("profiles").child(FirebaseAuth.instance.currentUser!.uid);
+    userData=mainprovider.database.reference().child("profiles").child(FirebaseAuth.instance.currentUser!.uid);
     userData.onValue.listen((event) {
      print(event.snapshot.value.toString());
      ProfileModel=ProfileModelRespose.fromJson(event.snapshot.value);
@@ -60,6 +67,8 @@ class _CustomerDataState extends State<CustomerData> {
    });
 
   }
+
+
   // void UploadUserData()async {
   //   app  =  await Firebase.initializeApp();
   //   database = FirebaseDatabase(app: app);
@@ -78,6 +87,8 @@ class _CustomerDataState extends State<CustomerData> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    mainprovider = Provider.of<Mainprovider>(myContext,listen: false);
+    customerDataProvider = Provider.of<CustomerDataProvider>(myContext,listen: false);
     startRealTimeFirebase();
    // UploadUserData();
   }
@@ -94,6 +105,7 @@ class _CustomerDataState extends State<CustomerData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text("Home Page"),
         backgroundColor: Colors.green,//pages[0]
       ),
@@ -136,13 +148,13 @@ class _CustomerDataState extends State<CustomerData> {
                   child: TextField(
                       onChanged: (char) {
                         if (char.isEmpty) {
-                          setState(() {
-                            allHotels=searchList;
-                          });
+
+                            customerDataProvider.setAllHotels(searchList);
+
 
                         }else
                         {
-                          allHotels=[];
+                          customerDataProvider.allHotels=[];
                           for(Hotel1 model in searchList  )
                           {
                             if (model.hotelGovernment!.contains(char)||
@@ -150,12 +162,11 @@ class _CustomerDataState extends State<CustomerData> {
                                 ||
                                 model.hotelAdress!.contains(char)
                             ) {
-                              allHotels.add(model);
+                              customerDataProvider.addNewHotel(model);
                             }
                           }
 
-                          setState(() {
-                          });
+
                         }
 
 
@@ -195,79 +206,87 @@ class _CustomerDataState extends State<CustomerData> {
 
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-        child: GridView.builder(
-          physics: NeverScrollableScrollPhysics(),
-       shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-
-          childAspectRatio: 1/1.5 ,// to disable GridView's scrolling
-
-      ),
-      itemCount: allHotels.length,
-      padding: EdgeInsets.all(2.0.r),
-      itemBuilder: (BuildContext context, int index) {
-        return     GestureDetector(
-          onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  HotelDetialsScreen(allHotels[(allHotels.length - 1) - index]),
-            ));
+        child: Selector<CustomerDataProvider,List<Hotel1>>(
+          selector: (p0, p1) {
+            return p1.allHotels;
           },
-          child: Padding(
-            padding: EdgeInsets.all(5.r),
-            child: Container(
-              width: 130.w,
-              height: 70.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
-                image: DecorationImage(
-                  image: NetworkImage(  allHotels[(allHotels.length - 1) - index]
-                      .hotelImage!,),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child:  Padding(
-                padding: EdgeInsets.all(0.r),
-                child: Container(
+          builder: (context, hotles, child) {
+            return GridView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
 
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
-                    gradient: new LinearGradient(
-                        colors: [
-                          Colors.black,
-                          const Color(0x19000000),
-                        ],
-                        begin: const FractionalOffset(0.0, 1.0),
-                        end: const FractionalOffset(0.0, 0.0),
-                        tileMode: TileMode.clamp),
-                  ),
+                childAspectRatio:1 /1.5 ,// to disable GridView's scrolling
+
+              ),
+              itemCount: hotles.length,
+              padding: EdgeInsets.all(2.0.r),
+              itemBuilder: (BuildContext context, int index) {
+                return     GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          HotelDetialsScreen(hotles[(hotles.length - 1) - index]),
+                    ));
+                  },
                   child: Padding(
-                    padding: EdgeInsets.all(10.r),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Center(
-                          child: Text(
-                            " ${allHotels[(allHotels.length - 1) - index].hotelName}",
-                            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500,color: Colors.white),
+                    padding: EdgeInsets.all(5.r),
+                    child: Container(
+                      width: 130.w,
+                      height: 70.h,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
+                        image: DecorationImage(
+                          image: NetworkImage( hotles[(hotles.length - 1) - index]
+                              .hotelImage!,),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child:  Padding(
+                        padding: EdgeInsets.all(0.r),
+                        child: Container(
+
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
+                            gradient: new LinearGradient(
+                                colors: [
+                                  Colors.black,
+                                  const Color(0x19000000),
+                                ],
+                                begin: const FractionalOffset(0.0, 1.0),
+                                end: const FractionalOffset(0.0, 0.0),
+                                tileMode: TileMode.clamp),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10.r),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    " ${hotles[(hotles.length - 1) - index].hotelName}",
+                                    style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500,color: Colors.white),
+                                  ),
+                                ),
+
+                              ],
+                            ),
                           ),
                         ),
-
-                      ],
+                      ), /* add child content here */
                     ),
                   ),
-                ),
-              ), /* add child content here */
-            ),
-          ),
-        );
+                );
 
-      },
-    )
+              },
+            );
+          },
+
+        )
 
 
 
@@ -297,14 +316,14 @@ class _CustomerDataState extends State<CustomerData> {
                   children: [
                     CircleAvatar(
                       child: ClipOval(
-                        child:Image.network(ProfileModel!.imgUrl!)
+                        child:Image.network(ProfileModel?.imgUrl ?? "")
 
                       ),
                       radius: 50,
 
                     ),
                     Text(
-                      ProfileModel!.name!,
+                      ProfileModel?.name??"",
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

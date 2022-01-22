@@ -55,14 +55,14 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
                   padding: const EdgeInsets.only(left: 10),
                   child: CircleAvatar(
                     child: ClipOval(
-                        child:Image.network(widget.allHotel!.hotelImage!),
+                        child:Image.network(widget.allHotel.hotelImage!),
                     ),
                     radius: 40.6.r,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(widget.allHotel!.hotelName!,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
+                  child: Text(widget.allHotel.hotelName!,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),),
                 )
               ],
             ),
@@ -81,19 +81,19 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
 
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text("Hotel Government:${widget.allHotel!.hotelGovernment!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+        child: Text("Hotel Government:${widget.allHotel.hotelGovernment!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
       ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text("Hotel Adress:${widget.allHotel!.hotelAdress!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                  child: Text("Hotel Adress:${widget.allHotel.hotelAdress!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text("Hotel Query no:${widget.allHotel!.hotelQueryPhone!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                  child: Text("Hotel Query no:${widget.allHotel.hotelQueryPhone!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text("Hotel Query no:${widget.allHotel!.hotelStarsNo!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                  child: Text("Hotel Query no:${widget.allHotel.hotelStarsNo!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                 ),
 
 
