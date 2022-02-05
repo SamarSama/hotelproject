@@ -33,14 +33,12 @@ class OpenProvider extends ChangeNotifier{
 
 
   void loginCache()async{
-    print("444444444");
 
     String userType=cacheDataImpHelper.getUserType();
-    print(userType);
+  //  print(userType);
 
     if (userType==DataHelper.ADMIN_TYPE) {
 
-      print("55555555");
 
       Future.delayed(Duration(milliseconds: 200),(){
         Navigator.of(myContext).pushReplacement(

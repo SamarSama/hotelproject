@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hotelproject/Models/Drawermodel.dart';
 import 'package:hotelproject/cache_data/cache_data_imp_helper.dart';
@@ -272,10 +273,28 @@ await  mainprovider.buildFiirebase("hotel");
                                     style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500,color: Colors.white),
                                   ),
                                 ),
+                                RatingBar.builder(
+                                  initialRating: 2,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 3,
+                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: Colors.yellowAccent,
+                                  ),
+                                  onRatingUpdate: (rating) {
 
+
+
+                                  },
+                                )
                               ],
+
                             ),
                           ),
+
                         ),
                       ), /* add child content here */
                     ),

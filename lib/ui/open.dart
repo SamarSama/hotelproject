@@ -118,11 +118,11 @@ class _openState extends State<open> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          openProvider.increaseI();
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     openProvider.increaseI();
+      //   },
+      // ),
     );
   }
 
