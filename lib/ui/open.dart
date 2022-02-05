@@ -18,7 +18,7 @@ class open extends StatefulWidget {
 
 class _openState extends State<open> {
   late OpenProvider openProvider;
-
+String?sa;
 
   @override
   void initState() {
