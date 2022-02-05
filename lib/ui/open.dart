@@ -118,11 +118,11 @@ String?sa;
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          openProvider.increaseI();
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     openProvider.increaseI();
+      //   },
+      // ),
     );
   }
 

@@ -1,11 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hotelproject/models/hotel1.dart';
+import 'package:hotelproject/models/room.dart';
 
 class HotelDetialsScreen extends StatefulWidget {
   final Hotel1 allHotel;
+
 
   const HotelDetialsScreen(this.allHotel, {Key? key}) : super(key: key);
 
@@ -14,17 +19,41 @@ class HotelDetialsScreen extends StatefulWidget {
 }
 
 class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
-  List<String> images = [
-    "asset/images/room1.jpg",
-    "asset/images/room2.jpg",
-    "asset/images/room3.jpg"
+  List<Room> images = [
+
   ];
+  late FirebaseDatabase database;
+  late FirebaseApp  app;
+  late DatabaseReference base;
+  late Room rooms;
+  void startRealTimeFirebase()async {
+    app = await Firebase.initializeApp();
+    database = FirebaseDatabase(app: app);
+    base = database.reference().child("rooms").child(widget.allHotel.hotelId.toString());
+    base.onChildAdded.listen((event) {
+      print(event.snapshot.value.toString());
+      rooms=Room.fromJson(event.snapshot.value);
+      images.add(rooms);
+      print(rooms?.roomImage);
+
+      setState(() {
+       });
+    });
+
+  }
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   print("55555555");
+    startRealTimeFirebase();
+    // UploadUserData();
+  }
   int _index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
     body: DefaultTabController(
-    length: 3,
+    length: 4,
     child: Scaffold(
     appBar: AppBar(
       backgroundColor: Colors.grey.shade100,
@@ -35,6 +64,8 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
     ),),
     Tab(icon: Icon(Icons.airline_seat_legroom_extra_rounded,color: Colors.green,),child: Text("Roomsٌٌ",style:TextStyle(color: Colors.green) ,),),
     Tab(icon: Icon(Icons.auto_stories_rounded,color: Colors.green,),child: Text("Services",style:TextStyle(color: Colors.green)),),
+      Tab(icon: Icon(Icons.star,color: Colors.green,),child: Text("Give Rate",style:TextStyle(color: Colors.green)),),
+
     ],
     ),
     title: const Text('Hotel Detials',style:TextStyle(color: Colors.green)),
@@ -95,6 +126,27 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text("Hotel Query no:${widget.allHotel.hotelStarsNo!}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child:
+        RatingBar.builder(
+          initialRating: 2,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 3,
+          itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.yellowAccent,
+          ),
+          onRatingUpdate: (rating) {
+
+
+
+          },
+        )
+                ),
 
 
               ],
@@ -107,16 +159,18 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
         child: Column(
           children: [
             Container(
+              height: 400.h,
+
               margin: EdgeInsets.only(bottom: 20),
               child: CarouselSlider(
                 items: [
                   ...images
                       .map(
                         (e) => Image(
-                      image: AssetImage(e),
-                      height: 300,
-                      width: 300,
+                      image: NetworkImage(rooms.roomImage!),
+                      width: 300.w,
                       fit: BoxFit.fill,
+
                     ),
                   )
                       .toList()
@@ -125,7 +179,7 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
                     autoPlay: true,
                     autoPlayInterval: Duration(seconds: 4),
                     pauseAutoPlayOnTouch: true,
-                    viewportFraction: 0.45,
+                    viewportFraction: 0.50,
                     enlargeCenterPage: true,
                     onPageChanged: (index, _) {
                       setState(() {
@@ -164,7 +218,9 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
       Center(
         child: Text("It's sunny here"),
       ),
-
+      Center(
+        child: Text("It's sunny here"),
+      ),
     ],
     ),
     ),

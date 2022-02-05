@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hotelproject/helperClass/ImportantFun.dart';
 import 'package:hotelproject/models/room.dart';
+import 'package:hotelproject/provoder/add_room_provider.dart';
 import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -26,28 +27,27 @@ class _addroomscreenState extends State<addroomscreen> {
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   late firebase_storage.Reference refStorage ;
+  late AddRoomProvider addRoomProvider;
   TextEditingController bednocon=TextEditingController();
   TextEditingController nightpricecon=TextEditingController();
   TextEditingController roomtypecon=TextEditingController();
-
   File ?imagge;
   ImportantFun importantFun=ImportantFun();
-
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     mainprovider=Provider.of<Mainprovider>(context,listen: false);
+    addRoomProvider=Provider.of<AddRoomProvider>(context,listen: false);
+
     startRealTimeFirebase();
   }
-
 
   void startRealTimeFirebase()async {
 
  await  mainprovider.buildFiirebase("rooms");
 
     mainprovider.base.child(widget.text.toString());
-    refStorage =  storage.ref('/samar_images').child("images");
   }
   Future Pickimage() async {
     try{
@@ -71,6 +71,7 @@ class _addroomscreenState extends State<addroomscreen> {
 
 
   }
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,7 +178,8 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                   padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   child:ElevatedButton.icon(onPressed: () async{
-                       await Pickimage();
+                      // await addRoomProvider.Pickimage(context);
+                    await Pickimage();
                   }
                   ,
                     label: Text("pick image"),
@@ -198,7 +200,7 @@ class _addroomscreenState extends State<addroomscreen> {
                     imagge
                         ?? File("")
                     ,errorBuilder:(context, error, stackTrace) =>
-                      Icon(Icons.supervised_user_circle),
+                      Icon(Icons.image),
                   )
                   ,
 
@@ -207,61 +209,61 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                   padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   child:ElevatedButton(onPressed: () {
-                    if(bednocon.text==""||roomtypecon.text==""||nightpricecon.text==""||imagge==null){
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text("Please Enter the data ")));
-                      return;
+                    // if(bednocon.text==""||roomtypecon.text==""||nightpricecon.text==""||imagge==null){
+                    //   ScaffoldMessenger.of(context)
+                    //       .showSnackBar(SnackBar(content: Text("Please Enter the data ")));
+                    //   return;
+                    //
+                    // }else
+                    // {
+                    //   showDialog<void>(
+                    //     context: context,
+                    //     barrierDismissible: false,
+                    //     builder: (BuildContext dialogContext) {
+                    //       return AlertDialog(
+                    //         title: Text('Loading....'),
+                    //         content: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: [
+                    //             CircularProgressIndicator(),
+                    //           ],
+                    //         ),
+                    //
+                    //       );
+                    //     },
+                    //   );
+                    // refStorage.child(DateTime.now().microsecondsSinceEpoch.toString()).putFile(imagge!).then((p0) async {
+                    //   String imgUrl = await p0.ref.getDownloadURL();
+                    //   String HotelId =widget.text.toString();
+                    //   String bedno =bednocon.text.trim() ;
+                    //   String nightprice = nightpricecon.text.trim();
+                    //   String RoomId = mainprovider.base.push().key;
+                    //   String roomtype =roomtypecon.text.trim() ;
+                    //   Room rooms=Room(
+                    //       bedNo: bedno,
+                    //       nightPrice: nightprice,
+                    //       roomType: roomtype,
+                    //       roomId:RoomId,
+                    //       hotelId: HotelId,
+                    //       roomImage: imgUrl
+                    //     // rate: ratingEnd
+                    //   );
+                    //   mainprovider.base.push().set(rooms.toJson()).whenComplete(() {
+                    //     setState(() {
+                    //       imagge=null;
+                    //     });
+                    //
+                    //     bednocon.text="";
+                    //     nightpricecon.text="";
+                    //     roomtypecon.text="";
+                    //     Navigator.of(context).pop();
+                    //     ScaffoldMessenger.of(context)
+                    //         .showSnackBar(SnackBar(content: Text("success ")));
+                    //   });
+                    // });
+                    //     }
 
-                    }else
-                    {
-                      showDialog<void>(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (BuildContext dialogContext) {
-                          return AlertDialog(
-                            title: Text('Loading....'),
-                            content: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(),
-                              ],
-                            ),
-
-                          );
-                        },
-                      );
-                    refStorage.child(DateTime.now().microsecondsSinceEpoch.toString()).putFile(imagge!).then((p0) async {
-                      String imgUrl = await p0.ref.getDownloadURL();
-                      String HotelId =widget.text.toString();
-                      String bedno =bednocon.text.trim() ;
-                      String nightprice = nightpricecon.text.trim();
-                      String RoomId = mainprovider.base.push().key;
-                      String roomtype =roomtypecon.text.trim() ;
-                      Room rooms=Room(
-                          bedNo: bedno,
-                          nightPrice: nightprice,
-                          roomType: roomtype,
-                          roomId:RoomId,
-                          hotelId: HotelId,
-                          roomImage: imgUrl
-                        // rate: ratingEnd
-                      );
-                      mainprovider.base.push().set(rooms.toJson()).whenComplete(() {
-                        setState(() {
-                          imagge=null;
-                        });
-
-                        bednocon.text="";
-                        nightpricecon.text="";
-                        roomtypecon.text="";
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text("success ")));
-                      });
-                    });
-                        }
-
-
+addRoomProvider.addrooms(bednocon.text, roomtypecon.text, nightpricecon.text, imagge, context, widget.text);
 
 
 

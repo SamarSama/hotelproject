@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hotelproject/provoder/add_room_provider.dart';
 import 'package:hotelproject/provoder/customer_data_provider.dart';
+import 'package:hotelproject/provoder/hotel_login_provider.dart';
 import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:hotelproject/provoder/open_provider.dart';
 import 'package:hotelproject/ui/open.dart';
@@ -26,7 +28,8 @@ void main() async {
       ChangeNotifierProvider(create: (context) => Mainprovider(),),
       ChangeNotifierProvider(create: (context) => OpenProvider(),),
       ChangeNotifierProvider(create: (context) => CustomerDataProvider(),),
-
+      ChangeNotifierProvider(create: (context) => HotelLoginProvider(),),
+      ChangeNotifierProvider(create: (context) => AddRoomProvider(),),
 
     ],
 

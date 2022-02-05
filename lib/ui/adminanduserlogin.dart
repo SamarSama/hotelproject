@@ -117,22 +117,15 @@ class adminanduserlogin extends StatelessWidget {
 
 
                       try {
-                        // UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                        //     email: emailCon.text,
-                        //     password: passwordCon.text
-                        // );
-                        //
-                        //
-                        //
-                        //
-                        // cacheDataImpHelper.setUserType(DataHelper.USER_TYPE);
-                        // cacheDataImpHelper.setEmail(emailCon.text);
-                        // cacheDataImpHelper.setPassword(passwordCon.text);
-                        userlogin.UserLogin(emailCon.text, passwordCon.text);
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CustomerData()));
-                        //ScaffoldMessenger.of(context).showSnackBar(
-                           // SnackBar(content: Text("s",style: TextStyle(color: Colors.red),)));
-                      //  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CustomerData()));
+                        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: emailCon.text,
+                            password: passwordCon.text
+                        );
+                        cacheDataImpHelper.setUserType(DataHelper.USER_TYPE);
+                        cacheDataImpHelper.setEmail(emailCon.text);
+                        cacheDataImpHelper.setPassword(passwordCon.text);
+
+                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CustomerData()));
                       } on FirebaseAuthException catch (e) {
                         if (e.email!=emailCon.text) {
                           ScaffoldMessenger.of(context).showSnackBar(
