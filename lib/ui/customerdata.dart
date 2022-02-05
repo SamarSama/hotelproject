@@ -371,6 +371,7 @@ await  mainprovider.buildFiirebase("hotel");
                 onTap: () async{
                await FirebaseAuth.instance.signOut();
                cacheDataImpHelper.setEmail("");
+               customerDataProvider.allHotels=[];
                cacheDataImpHelper.setPassword("");
                cacheDataImpHelper.setUserType("");
                Navigator.of(context)

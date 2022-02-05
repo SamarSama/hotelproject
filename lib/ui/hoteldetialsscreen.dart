@@ -32,12 +32,14 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
     base = database.reference().child("rooms").child(widget.allHotel.hotelId.toString());
     base.onChildAdded.listen((event) {
       print(event.snapshot.value.toString());
-      rooms=Room.fromJson(event.snapshot.value);
+      rooms = Room.fromJson(event.snapshot.value);
       images.add(rooms);
-      print(rooms?.roomImage);
 
-      setState(() {
-       });
+      print("images of fire");
+      print(rooms.roomImage);
+      print("///////////////////");
+
+      setState(() {});
     });
 
   }
@@ -159,33 +161,39 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
         child: Column(
           children: [
             Container(
-              height: 400.h,
-
-              margin: EdgeInsets.only(bottom: 20),
+                      margin: EdgeInsets.only(bottom: 20),
               child: CarouselSlider(
                 items: [
                   ...images
                       .map(
-                        (e) => Image(
-                      image: NetworkImage(rooms.roomImage!),
-                      width: 300.w,
-                      fit: BoxFit.fill,
-
-                    ),
-                  )
-                      .toList()
-                ],
+                                (e) => InkWell(
+                                  onTap: () {
+                                    print("sssssssssssssss");
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    child: Image.network(
+                                      e.roomImage!,
+                                      width: 300.w,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList()
+                        ],
                 options: CarouselOptions(
                     autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 4),
-                    pauseAutoPlayOnTouch: true,
-                    viewportFraction: 0.50,
-                    enlargeCenterPage: true,
-                    onPageChanged: (index, _) {
-                      setState(() {
-                        _index = index;
-                      });
-                    }),
+                            height: 400.h,
+                            autoPlayInterval: Duration(seconds: 4),
+                            pauseAutoPlayOnTouch: true,
+                            viewportFraction: 0.50,
+                            enlargeCenterPage: true,
+                            onPageChanged: (index, _) {
+                              setState(() {
+                                _index = index;
+                              });
+                            }),
               ),
             ),
             Row(

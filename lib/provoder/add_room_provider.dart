@@ -11,6 +11,17 @@ import 'package:image_picker/image_picker.dart';
 
 class AddRoomProvider extends ChangeNotifier{
   File ?imagge;
+  TextEditingController bednocon=TextEditingController();
+
+  String text="NO";
+
+  void changeWord(){
+    text="yes";
+    notifyListeners();
+  }
+
+  TextEditingController nightpricecon=TextEditingController();
+  TextEditingController roomtypecon=TextEditingController();
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   late firebase_storage.Reference refStorage ;
@@ -26,6 +37,7 @@ class AddRoomProvider extends ChangeNotifier{
 
     }else
     {
+      this.imagge=imagge;
       showDialog<void>(
         context: cc,
         barrierDismissible: false,
@@ -63,38 +75,36 @@ class AddRoomProvider extends ChangeNotifier{
           // rate: ratingEnd
         );
         base.push().set(rooms.toJson()).whenComplete(() {
-            imagge=null;
-notifyListeners(
 
-);
-          bednocon="";
-          nightpricecon="";
-          roomtypecon="";
+
+          this.bednocon.text="";
+            this.nightpricecon.text="";
+            this.roomtypecon.text="";
+            this.imagge=null;
           Navigator.of(cc).pop();
           ScaffoldMessenger.of(cc)
               .showSnackBar(SnackBar(content: Text("success ")));
+            notifyListeners(
+
+            );
         });
       });
     }
 
   }
-  Future Pickimage(cc) async {
-    try{
+  Future Pickimage() async {
+
       final image=  await ImagePicker().pickImage(source: ImageSource.gallery);
       if(image==null)
       {
         return;
       }
-        imagge=File(image.path);
-        print(imagge?.path);
+
+     this.imagge=File(image.path);
       notifyListeners();
-    }on PlatformException catch(e) {
-      print(e);
-      Navigator.of(cc).pop();
-      ScaffoldMessenger.of(cc)
-          .showSnackBar(SnackBar(content: Text("failed ")));
-    }
+
 
 
   }
+
 }

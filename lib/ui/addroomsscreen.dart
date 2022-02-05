@@ -1,13 +1,10 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hotelproject/helperClass/ImportantFun.dart';
-import 'package:hotelproject/models/room.dart';
 import 'package:hotelproject/provoder/add_room_provider.dart';
 import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,16 +19,9 @@ class addroomscreen extends StatefulWidget {
 
 class _addroomscreenState extends State<addroomscreen> {
  late Mainprovider mainprovider;
+ late AddRoomProvider addRoomProvider;
 
 
-  firebase_storage.FirebaseStorage storage =
-      firebase_storage.FirebaseStorage.instance;
-  late firebase_storage.Reference refStorage ;
-  late AddRoomProvider addRoomProvider;
-  TextEditingController bednocon=TextEditingController();
-  TextEditingController nightpricecon=TextEditingController();
-  TextEditingController roomtypecon=TextEditingController();
-  File ?imagge;
   ImportantFun importantFun=ImportantFun();
   @override
   void didChangeDependencies() {
@@ -49,28 +39,7 @@ class _addroomscreenState extends State<addroomscreen> {
 
     mainprovider.base.child(widget.text.toString());
   }
-  Future Pickimage() async {
-    try{
-      final image=  await ImagePicker().pickImage(source: ImageSource.gallery);
-      if(image==null)
-      {
-        return;
-      }
-      setState(() {
-        this.imagge=File(image.path);
-        print(imagge?.path);
-      }
 
-      );
-    }on PlatformException catch(e) {
-      print(e);
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("failed ")));
-    }
-
-
-  }
  
   @override
   Widget build(BuildContext context) {
@@ -92,18 +61,16 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                 child: TextField(
-                  controller: bednocon,
+                    controller: addRoomProvider.bednocon,
+                    keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
-
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(color: Colors.white),
                       ),
 
                       hintText: 'Enter Room bed No',
-                      hintStyle: TextStyle(
-                          color: Colors.white
-                      ),
+                      hintStyle: TextStyle(color: Colors.white),
                       labelText: 'Room bed No',
                       labelStyle: TextStyle(
                           color: Colors.white
@@ -120,7 +87,8 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                 child: TextField(
-                  controller: nightpricecon,
+                  controller: addRoomProvider.nightpricecon,
+                    keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
 
                       enabledBorder: OutlineInputBorder(
@@ -148,7 +116,7 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                 child: TextField(
-                  controller: roomtypecon,
+                  controller: addRoomProvider.roomtypecon,
                     decoration: new InputDecoration(
 
                       enabledBorder: OutlineInputBorder(
@@ -179,7 +147,7 @@ class _addroomscreenState extends State<addroomscreen> {
                   padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   child:ElevatedButton.icon(onPressed: () async{
                       // await addRoomProvider.Pickimage(context);
-                    await Pickimage();
+                    await addRoomProvider.Pickimage();
                   }
                   ,
                     label: Text("pick image"),
@@ -196,16 +164,34 @@ class _addroomscreenState extends State<addroomscreen> {
                   padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   child:
 
-                  Image.file(
-                    imagge
-                        ?? File("")
-                    ,errorBuilder:(context, error, stackTrace) =>
-                      Icon(Icons.image),
+                  Selector<AddRoomProvider,File?>(
+                    selector: (p0, p1) => p1.imagge,
+                    builder: (context, img, child) {
+
+                      return Image.file(
+                        img
+                            ?? File("")
+                        ,errorBuilder:(context, error, stackTrace) =>
+                          Icon(Icons.image),
+                      );
+
+                    },
+                    shouldRebuild: (previous, next) => true,
+
+
                   )
                   ,
 
                 ),
               ),
+              SizedBox(height: 20,),
+              // Selector<AddRoomProvider,String>(
+              //     selector: (p0, p1) => p1.text,
+              //     builder: (context, txt, child) {
+              //       return Text(txt);
+              //     },
+              //   shouldRebuild: (previous, next) => true,
+              //     ),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   child:ElevatedButton(onPressed: () {
@@ -262,12 +248,15 @@ class _addroomscreenState extends State<addroomscreen> {
                     //   });
                     // });
                     //     }
-
-addRoomProvider.addrooms(bednocon.text, roomtypecon.text, nightpricecon.text, imagge, context, widget.text);
-
-
-
-                  },
+                           // addRoomProvider.changeWord();
+                    addRoomProvider.addrooms(
+                          addRoomProvider.bednocon.text,
+                        addRoomProvider.roomtypecon.text,
+                        addRoomProvider.nightpricecon.text,
+                        addRoomProvider.imagge,
+                          context,
+                          widget.text);
+                    },
                     style: TextButton.styleFrom(
                       primary: Colors.blue,
                     ),
