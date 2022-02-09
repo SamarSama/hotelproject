@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hotelproject/provoder/add_room_provider.dart';
 import 'package:hotelproject/provoder/customer_data_provider.dart';
+import 'package:hotelproject/provoder/hotel_detials_provider.dart';
 import 'package:hotelproject/provoder/hotel_login_provider.dart';
 import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:hotelproject/provoder/open_provider.dart';
@@ -30,6 +31,8 @@ void main() async {
       ChangeNotifierProvider(create: (context) => CustomerDataProvider(),),
       ChangeNotifierProvider(create: (context) => HotelLoginProvider(),),
       ChangeNotifierProvider(create: (context) => AddRoomProvider(),),
+      ChangeNotifierProvider(create: (context) => HotelDetialsProvider(),),
+
 
     ],
 

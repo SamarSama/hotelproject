@@ -39,14 +39,8 @@ class _CustomerDataState extends State<CustomerData> {
 
   List<Hotel1> searchList = [];
 
-
   void startRealTimeFirebase()async {
 await  mainprovider.buildFiirebase("hotel");
-
-    //// User user = await auth.currentUser!;
-    // uid = user.uid;
-    // final uemail = user.email;
-
     mainprovider.base.onChildAdded.listen((event) {
       print(event.snapshot.value.toString());
       Hotel1 p=Hotel1.fromJson(event.snapshot.value);
@@ -69,21 +63,6 @@ await  mainprovider.buildFiirebase("hotel");
 
   }
 
-
-  // void UploadUserData()async {
-  //   app  =  await Firebase.initializeApp();
-  //   database = FirebaseDatabase(app: app);
-  //   userData=database.reference().child("profiles").child(FirebaseAuth.instance.currentUser!.uid);
-  //   userData.onChildAdded.listen((event) {
-  //     print(event.snapshot.value.toString());
-  //     ProfileModel=ProfileModelRespose.fromJson(event.snapshot.value);
-  //     print(ProfileModel?.name);
-  //
-  //     setState(() {
-  //     });
-  //   }).onDone(() {
-  //   });
-  // }
   @override
   void initState() {
     // TODO: implement initState
@@ -91,6 +70,7 @@ await  mainprovider.buildFiirebase("hotel");
     mainprovider = Provider.of<Mainprovider>(myContext,listen: false);
     customerDataProvider = Provider.of<CustomerDataProvider>(myContext,listen: false);
     startRealTimeFirebase();
+    customerDataProvider.allHotels=[];
    // UploadUserData();
   }
   List drawerMenu1=[
@@ -99,9 +79,7 @@ await  mainprovider.buildFiirebase("hotel");
     Drawermodel(Icons.notes, "Booking",2),
     Drawermodel(Icons.event, "Add Compliaments",3),
   ];
-  List drawerMenu2=[
-    Drawermodel(Icons.settings, "Settings",4),
-  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,7 +219,8 @@ await  mainprovider.buildFiirebase("hotel");
                         borderRadius: BorderRadius.all(Radius.circular(15.0.r)),
                         image: DecorationImage(
                           image: NetworkImage( hotles[(hotles.length - 1) - index]
-                              .hotelImage!,),
+                              .hotelImage!,
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -274,7 +253,7 @@ await  mainprovider.buildFiirebase("hotel");
                                   ),
                                 ),
                                 RatingBar.builder(
-                                  initialRating: 2,
+                                  initialRating:0,
                                   minRating: 1,
                                   direction: Axis.horizontal,
                                   allowHalfRating: true,
@@ -360,8 +339,7 @@ await  mainprovider.buildFiirebase("hotel");
               ), //he
               ...drawerMenu1.map((e) => fmenu1(e)),
               Divider(height: 1,thickness: 0,),
-              ...drawerMenu2.map((e) => fmenu1(e)),
-              Divider(height: 1,thickness: 0,),
+
               /// logout
               ListTile(
                 leading: Icon(Icons.logout),

@@ -8,6 +8,8 @@ import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:hotelproject/ui/hotelareahome.dart';
 import 'package:hotelproject/utils/data/data_helper.dart';
 
+import 'hotel_detials_provider.dart';
+
 class HotelLoginProvider extends ChangeNotifier {
   late FirebaseDatabase database;
   late Mainprovider mainprovider;

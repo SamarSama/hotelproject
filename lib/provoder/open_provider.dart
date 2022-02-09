@@ -69,6 +69,8 @@ class OpenProvider extends ChangeNotifier{
       } on FirebaseAuthException catch (e) {
 
 
+
+
       }
 
     }
