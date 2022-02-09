@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,15 +7,35 @@ import 'package:hotelproject/models/room.dart';
 
 class Roomdetials extends StatefulWidget {
   final Room rooms;
-  const Roomdetials(this.rooms,  {Key? key}) : super(key: key);
+  final String roomKey;
+  const Roomdetials(this.rooms,this.roomKey,  {Key? key}) : super(key: key);
 
   @override
   _RoomdetialsState createState() => _RoomdetialsState();
 }
 
 class _RoomdetialsState extends State<Roomdetials> {
+  late FirebaseApp app;
+  late DatabaseReference base;
+  late FirebaseDatabase database;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    init();
+
+
+  }
+  void init()async{
+    app = await Firebase.initializeApp();
+    database = FirebaseDatabase(app: app);
+    base = database.reference().child("rooms");
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(widget.roomKey);
     return Scaffold(
       body:  ListView(
         children: [
@@ -74,6 +96,41 @@ class _RoomdetialsState extends State<Roomdetials> {
           ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            // false = user must tap button, true = tap outside dialog
+            builder: (BuildContext dialogContext) {
+              return AlertDialog(
+                title: Text('warring'),
+                content: Text('are you sure to delte tis room'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                    },
+                  ),
+                  TextButton(
+                    child: Text('yes'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      base.child(widget.rooms.hotelId!)
+                      .child(widget.roomKey)
+                      .remove().whenComplete(() {
+                        Navigator.of(context).pop();
+                      });
+                      // Dismiss alert dialog
+                     // widget.rooms.
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },child: Icon(Icons.remove_circle),),
     );
   }
 }

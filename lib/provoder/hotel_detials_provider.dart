@@ -10,15 +10,18 @@ class HotelDetialsProvider extends ChangeNotifier{
   late DatabaseReference base;
   late Room rooms;
   List<Room> images = [];
+  List<String> keys=[];
   void startRealTimeFirebase(String hotelId)async {
     app = await Firebase.initializeApp();
     database = FirebaseDatabase(app: app);
     base = database.reference().child("rooms").child(hotelId);
     base.onChildAdded.listen((event) {
-      print(event.snapshot.value.toString());
+    //  print(event.snapshot.value.toString());
+      print(event.snapshot.key!);
+      keys.add(event.snapshot.key!);
       rooms = Room.fromJson(event.snapshot.value);
       images.add(rooms);
-      print(rooms.roomImage);
+   //   print(rooms.roomImage);
       notifyListeners();
 
     });

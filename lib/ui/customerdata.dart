@@ -38,11 +38,13 @@ class _CustomerDataState extends State<CustomerData> {
   late final uid;
 
   List<Hotel1> searchList = [];
+  List<String> keys = [];
 
   void startRealTimeFirebase()async {
 await  mainprovider.buildFiirebase("hotel");
     mainprovider.base.onChildAdded.listen((event) {
-      print(event.snapshot.value.toString());
+      print(event.snapshot.key);
+      keys.add(event.snapshot.key!);
       Hotel1 p=Hotel1.fromJson(event.snapshot.value);
       customerDataProvider.addNewHotel(p);
       searchList.add(p);
@@ -206,7 +208,7 @@ await  mainprovider.buildFiirebase("hotel");
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          HotelDetialsScreen(hotles[(hotles.length - 1) - index]),
+                          HotelDetialsScreen(hotles[(hotles.length - 1) - index],keys[(hotles.length - 1) - index]),
                     ));
                   },
                   child: Padding(
@@ -252,22 +254,31 @@ await  mainprovider.buildFiirebase("hotel");
                                     style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500,color: Colors.white),
                                   ),
                                 ),
-                                RatingBar.builder(
-                                  initialRating:0,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 3,
-                                  itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: Colors.yellowAccent,
-                                  ),
-                                  onRatingUpdate: (rating) {
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    RatingBar.builder(
+                                      initialRating:double.parse(hotles[(hotles.length - 1) - index].rate!.toString()),
+                                      minRating: 1,
+                                      unratedColor: Colors.grey,
+                                      itemSize: 30,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      ignoreGestures: true,
+                                      itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                      itemBuilder: (context, _) => Icon(
+                                        Icons.star,
+                                        color: Colors.yellowAccent,
+                                        size: 2,
+                                      ),
+                                      onRatingUpdate: (rating) {
 
 
 
-                                  },
+                                      },
+                                    ),
+                                  ],
                                 )
                               ],
 

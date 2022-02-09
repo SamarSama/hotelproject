@@ -16,56 +16,78 @@ import 'package:provider/provider.dart';
 
 class HotelDetialsScreen extends StatefulWidget {
   final Hotel1 allHotel;
+  final keyHotel;
 
-
-  const HotelDetialsScreen(this.allHotel, {Key? key}) : super(key: key);
+  const HotelDetialsScreen(this.allHotel, this.keyHotel, {Key? key})
+      : super(key: key);
 
   @override
   _HotelDetialsScreenState createState() => _HotelDetialsScreenState();
 }
 
 class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
-List <RateModel> rate=[];
+  List<RateModel> rate = [];
 
   late HotelDetialsProvider hotelDetialsProvider;
   late FirebaseDatabase database;
-  late FirebaseApp  app;
-  late DatabaseReference base,base1;
+  late FirebaseApp app;
+  late DatabaseReference base, base1, base2;
   late Query q;
+  double total = 0.0;
   late Room rooms;
-List<Room> allrooms = [];
-late RateModel rateModel;
-late Mainprovider mainprovider;
+  List<Room> allrooms = [];
+  late RateModel rateModel;
+  late Mainprovider mainprovider;
 
-  void CalculateHotelRate()async {
+  void CalculateHotelRate() async {
     app = await Firebase.initializeApp();
     database = FirebaseDatabase(app: app);
     base1 = database.reference().child("rating");
-    q=base1.orderByChild("HotelId").equalTo(widget.allHotel.hotelId.toString());
-    base1.onValue.listen((event) {
-      print(event.snapshot.value.toString());
-      rateModel=RateModel.fromJson(event.snapshot.value);
-      print("7777777");
-      print(rateModel?.rate);
-      setState(() {
+    base2 = database.reference().child("hotel");
+    q = base1.child(widget.allHotel.hotelId!);
+    q.onValue.listen((event) {
+      total = 0.0;
+
+      Map m = event.snapshot.value;
+
+      m.forEach((key, value) {
+        Map m2 = value;
+        total += m2["rate"];
       });
+
+      double avg = total / m.length;
+
+      print(widget.keyHotel);
+      print("avg");
+      print(avg);
+      Hotel1 hotel = widget.allHotel;
+      hotel.rate = avg;
+      base2.child(widget.keyHotel!).set(hotel.toJson());
+
+      // for( var snap in event.snapshot.)
+      //   {
+      //     print(snap.toString());
+      //   }
+      // rateModel=RateModel.fromJson(event.snapshot.value);
+      // print("7777777");
+      // print(rateModel.rate);
+      // setState(() {
+      // });
     });
 
   }
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    hotelDetialsProvider =
+        Provider.of<HotelDetialsProvider>(context, listen: false);
+    hotelDetialsProvider
+        .startRealTimeFirebase(widget.allHotel.hotelId.toString());
+    CalculateHotelRate();
+    hotelDetialsProvider.images = [];
     // UploadUserData();
   }
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    hotelDetialsProvider=Provider.of<HotelDetialsProvider>(context,listen: false);
-    hotelDetialsProvider.startRealTimeFirebase(widget.allHotel.hotelId.toString());
-    CalculateHotelRate();
-    hotelDetialsProvider.images=[];
-  }
+
   int _index = 0;
   @override
   Widget build(BuildContext context) {
@@ -154,31 +176,35 @@ late Mainprovider mainprovider;
                     child:
         RatingBar.builder(
           initialRating: 0,
-          minRating: 0,
-          direction: Axis.horizontal,
-          allowHalfRating: true,
-          itemCount: 3,
-          itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-          itemBuilder: (context, _) => Icon(
-              Icons.star,
-              color: Colors.yellowAccent,
-          ),
-          onRatingUpdate: (rating) async{
-            app = await Firebase.initializeApp();
-            database = FirebaseDatabase(app: app);
-            base = database.reference().child("rating").child(widget.allHotel.hotelId.toString()).child(FirebaseAuth.instance.currentUser!.uid!);
-            double rate =rating ;
-            RateModel ratte=RateModel(
-                rate: rate,
+                                minRating: 0,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 1.0),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.yellowAccent,
+                                ),
+                                onRatingUpdate: (rating) async {
+                                  app = await Firebase.initializeApp();
+                                  database = FirebaseDatabase(app: app);
+                                  base = database
+                                      .reference()
+                                      .child("rating")
+                                      .child(widget.allHotel.hotelId.toString())
+                                      .child(FirebaseAuth
+                                          .instance.currentUser!.uid);
+                                  double rate = rating;
+                                  RateModel ratte = RateModel(
+                                    rate: rate,
 
-              // rate: ratingEnd
-            );
-            base.set(ratte.toJson()).whenComplete(() {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text("success ")));
-
-
-            });
+                                    // rate: ratingEnd
+                                  );
+                                  base.set(ratte.toJson()).whenComplete(() {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text("success ")));
+                                  });
 
           },
         )
@@ -197,10 +223,13 @@ late Mainprovider mainprovider;
           return p1.images;
         },
     builder: (context, Value, child) {
-          if(Value==[]){
+          if(Value.isEmpty){
             return Container(
               child: Center(
-                child: Text("the Hotel still not puplish the room data",style: TextStyle(fontSize: 40),),
+                child: Text(
+                  "the Hotel still not puplish the room data",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 40),),
               ),
             ) ;
           }else{
@@ -216,7 +245,8 @@ late Mainprovider mainprovider;
                             .map(
                               (e) => InkWell(
                             onTap: () {
-                             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Roomdetials(hotelDetialsProvider.rooms)));
+                             Navigator.of(context).push(MaterialPageRoute(builder:
+                                 (context)=>Roomdetials(hotelDetialsProvider.images[_index],hotelDetialsProvider.keys[_index])));
                             },
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20.r),

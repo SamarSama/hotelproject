@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:hotelproject/Models/hotel1.dart';
 import 'package:hotelproject/cache_data/cache_data_imp_helper.dart';
 import 'package:hotelproject/ui/open.dart';
@@ -399,24 +398,23 @@ class _adminState extends State<admin> {
     );
 
     refStorage.child(DateTime.now().microsecondsSinceEpoch.toString()).putFile(imgFile).then((p0) async{
-      String imgUrl= await p0.ref.getDownloadURL();
+      String imgUrl = await p0.ref.getDownloadURL();
       String HotelName = HotelNameCon.text.trim();
-      int HotelStars =int.parse(HotelStarsCon.text.trim()) ;
+      int HotelStars = int.parse(HotelStarsCon.text.trim());
       String HotelGovernment = HotelGovernmentCon.text.trim();
       String HotelQueryPhone = HotelQueryPhoneCon.text.trim();
-      String HotelAdress =HotelAdressCon.text.trim() ;
-      String HotelId = base.push().key;
-      Hotel1 hotel=Hotel1(
+      String HotelAdress = HotelAdressCon.text.trim();
+      String HotelId = base.key;
+      Hotel1 hotel = Hotel1(
         hotelName: HotelName,
         hotelStarsNo: HotelStars,
         hotelGovernment: HotelGovernment,
-        hotelQueryPhone:HotelQueryPhone,
-        hotelAdress:HotelAdress,
-        hotelImage:imgUrl,
+        hotelQueryPhone: HotelQueryPhone,
+        hotelAdress: HotelAdress,
+        hotelImage: imgUrl,
         hotelId: HotelId,
-        // rate: ratingEnd
       );
-
+      hotel.rate=0.0;
 
       base.push().set(hotel.toJson()).whenComplete(() {
 
