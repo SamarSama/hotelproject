@@ -15,8 +15,9 @@ class Hotel1 {
       String? hotelQueryPhone, 
       String? hotelAdress, 
       String? hotelImage, 
-      String? hotelId, 
-      double? rate,}){
+      String? hotelId,
+
+    dynamic rate,}){
     _hotelName = hotelName;
     _hotelStarsNo = hotelStarsNo;
     _hotelGovernment = hotelGovernment;
@@ -44,7 +45,7 @@ class Hotel1 {
   String? _hotelAdress;
   String? _hotelImage;
   String? _hotelId;
-  double? _rate;
+  dynamic _rate;
 
   String? get hotelName => _hotelName;
   int? get hotelStarsNo => _hotelStarsNo;
@@ -53,7 +54,7 @@ class Hotel1 {
   String? get hotelAdress => _hotelAdress;
   String? get hotelImage => _hotelImage;
   String? get hotelId => _hotelId;
-  double? get rate => _rate;
+  dynamic get rate => _rate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -68,7 +69,7 @@ class Hotel1 {
     return map;
   }
 
-  set rate(double? value) {
+  set rate(dynamic value) {
     _rate = value;
   }
 }

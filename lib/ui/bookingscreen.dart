@@ -1,15 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hotelproject/models/booking.dart';
+import 'package:hotelproject/main.dart';
 import 'package:hotelproject/models/room.dart';
 import 'package:hotelproject/provoder/booking_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'customerdata.dart';
 
 class BookingScreen extends StatefulWidget {
   final Room rooms;
@@ -27,9 +23,10 @@ class _BookingScreenState extends State<BookingScreen> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    bookingProvider=Provider.of<BookingProvider>(context,listen: false);
+    bookingProvider=Provider.of<BookingProvider>(myContext,listen: false);
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

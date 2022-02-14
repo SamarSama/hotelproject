@@ -1,13 +1,32 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:hotelproject/models/booking.dart';
 
-class BookProvider extends ChangeNotifier {
+class BookGet extends GetxController {
+  RxInt count=0.obs;
+  RxString name="".obs;
+
+
+  void increnmntCount()
+  {
+    count++;
+
+
+
+  }
+  void changeName( String name)
+  {
+    this.name.value=name;
+
+  }
+
+
   late FirebaseApp app;
   late DatabaseReference base;
   late FirebaseDatabase database;
-  List<Booking> allbooking = [];
+  RxList<Booking> allbooking = <Booking>[].obs;
 late Query q;
 
   void customerBooking(String uid) async {
@@ -20,13 +39,14 @@ late Query q;
     q.onChildAdded.listen((event) {
       print(event.snapshot.key);
       Booking p = Booking.fromJson(event.snapshot.value);
-      allbooking.add(p);
-      notifyListeners();
+      allbooking.value.add(p);
+      allbooking.refresh();
+
     });
   }
   void addHotelBook(Booking booking) {
-    allbooking = [...allbooking, booking];
-    notifyListeners();
+  //  allbooking = [...allbooking, booking];
+
   }
   void HotelBooking(String HotelKey) async {
 
