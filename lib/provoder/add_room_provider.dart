@@ -12,6 +12,8 @@ import 'package:image_picker/image_picker.dart';
 class AddRoomProvider extends ChangeNotifier{
   File ?imagge;
   TextEditingController bednocon=TextEditingController();
+  TextEditingController roomnumbercon=TextEditingController();
+  TextEditingController contentcon=TextEditingController();
 
   String text="NO";
 
@@ -28,9 +30,9 @@ class AddRoomProvider extends ChangeNotifier{
   late FirebaseDatabase database;
   late FirebaseApp  app;
   late DatabaseReference base;
- Future<void>addrooms(String bednocon,String roomtypecon,String nightpricecon,imagge,cc,String text )async{
+ Future<void>addrooms(String bednocon,String roomtypecon,String nightpricecon,imagge,cc,String text ,String roomno,String roomcontient)async{
 
-    if(bednocon==""||roomtypecon==""||nightpricecon==""||imagge==null){
+    if(bednocon==""||roomtypecon==""||nightpricecon==""||roomno==""||roomcontient==""||imagge==null){
       ScaffoldMessenger.of(cc)
           .showSnackBar(SnackBar(content: Text("Please Enter the data ")));
       return;
@@ -65,13 +67,17 @@ class AddRoomProvider extends ChangeNotifier{
         String nightprice = nightpricecon.trim();
         String RoomId = base.push().key;
         String roomtype =roomtypecon.trim() ;
+        String roomnum=roomno;
+        String roomcontientt=roomcontient;
         Room rooms=Room(
             bedNo: bedno,
             nightPrice: nightprice,
             roomType: roomtype,
             roomId:RoomId,
             hotelId: HotelId,
-            roomImage: imgUrl
+            roomImage: imgUrl,
+          roomnumber: roomnum,
+          content: roomcontientt
           // rate: ratingEnd
         );
         base.push().set(rooms.toJson()).whenComplete(() {
@@ -80,6 +86,8 @@ class AddRoomProvider extends ChangeNotifier{
           this.bednocon.text="";
             this.nightpricecon.text="";
             this.roomtypecon.text="";
+            this.roomnumbercon.text="";
+            this.contentcon.text="";
             this.imagge=null;
           Navigator.of(cc).pop();
           ScaffoldMessenger.of(cc)

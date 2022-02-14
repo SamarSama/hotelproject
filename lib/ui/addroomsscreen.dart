@@ -61,6 +61,9 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                 child: TextField(
+                  style: TextStyle(
+                    fontFamily: "Arial"
+                  ),
                     controller: addRoomProvider.bednocon,
                     keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
@@ -87,6 +90,9 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                 child: TextField(
+                    style: TextStyle(
+                        fontFamily: "Arial"
+                    ),
                   controller: addRoomProvider.nightpricecon,
                     keyboardType: TextInputType.number,
                     decoration: new InputDecoration(
@@ -116,6 +122,9 @@ class _addroomscreenState extends State<addroomscreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                 child: TextField(
+                    style: TextStyle(
+                        fontFamily: "Arial"
+                    ),
                   controller: addRoomProvider.roomtypecon,
                     decoration: new InputDecoration(
 
@@ -141,8 +150,70 @@ class _addroomscreenState extends State<addroomscreen> {
                       //suffixStyle: const TextStyle(color: Colors.green)),
                     )),
               ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                child: TextField(
+                    style: TextStyle(
+                        fontFamily: "Arial"
+                    ),
+                    controller: addRoomProvider.roomnumbercon,
+                    keyboardType: TextInputType.number,
+                    decoration: new InputDecoration(
 
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
 
+                      hintText: 'Enter Room number',
+                      hintStyle: TextStyle(
+                          color: Colors.white
+                      ),
+                      labelText: 'Room number',
+                      labelStyle: TextStyle(
+                          color: Colors.white
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.border_color,
+                        color: Colors.white,
+                      ),
+                      //prefixText: ' ',
+                      //suffixText: 'USD',
+                      //suffixStyle: const TextStyle(color: Colors.green)),
+                    )),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                child: TextField(
+                    style: TextStyle(
+                        fontFamily: "Arial"
+                    ),
+                    controller: addRoomProvider.contentcon,
+                    keyboardType: TextInputType.text,
+                    decoration: new InputDecoration(
+
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+
+                      hintText: 'Enter Room Content',
+                      hintStyle: TextStyle(
+                          color: Colors.white
+                      ),
+                      labelText: 'Room Room Content',
+                      labelStyle: TextStyle(
+                          color: Colors.white
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.atm_sharp,
+                        color: Colors.white,
+                      ),
+                      //prefixText: ' ',
+                      //suffixText: 'USD',
+                      //suffixStyle: const TextStyle(color: Colors.green)),
+                    )),
+              ),
               Padding(
                   padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   child:ElevatedButton.icon(onPressed: () async{
@@ -184,14 +255,7 @@ class _addroomscreenState extends State<addroomscreen> {
 
                 ),
               ),
-              SizedBox(height: 20,),
-              // Selector<AddRoomProvider,String>(
-              //     selector: (p0, p1) => p1.text,
-              //     builder: (context, txt, child) {
-              //       return Text(txt);
-              //     },
-              //   shouldRebuild: (previous, next) => true,
-              //     ),
+
               Padding(
                   padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                   child:ElevatedButton(onPressed: () {
@@ -249,13 +313,25 @@ class _addroomscreenState extends State<addroomscreen> {
                     // });
                     //     }
                            // addRoomProvider.changeWord();
+                    // String bednocon
+                    // ,String roomtypecon
+                    // ,String nightpricecon
+                    // ,imagge
+                    // ,cc
+                    // ,String text
+                    // ,String roomno
+                    // ,String roomcontient
                     addRoomProvider.addrooms(
                           addRoomProvider.bednocon.text,
                         addRoomProvider.roomtypecon.text,
                         addRoomProvider.nightpricecon.text,
                         addRoomProvider.imagge,
-                          context,
-                          widget.text);
+                        context,
+                      widget.text,
+                          addRoomProvider.roomnumbercon.text,
+                      addRoomProvider.contentcon.text,
+
+                    );
                     },
                     style: TextButton.styleFrom(
                       primary: Colors.blue,

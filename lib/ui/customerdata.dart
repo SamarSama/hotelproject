@@ -13,6 +13,10 @@ import 'package:hotelproject/models/hotel1.dart';
 import 'package:hotelproject/models/profile_model_respose.dart';
 import 'package:hotelproject/provoder/customer_data_provider.dart';
 import 'package:hotelproject/provoder/main_provider.dart';
+import 'package:hotelproject/ui/bookingscreen.dart';
+import 'package:hotelproject/ui/compliantsscreen.dart';
+import 'package:hotelproject/ui/hotel_Login.dart';
+import 'package:hotelproject/ui/hotelbooking.dart';
 import 'package:hotelproject/ui/open.dart';
 import 'package:hotelproject/ui/userdata_screen.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +34,6 @@ class _CustomerDataState extends State<CustomerData> {
 
   late Mainprovider mainprovider;
   late CustomerDataProvider customerDataProvider;
-
   CacheDataImpHelper cacheDataImpHelper=CacheDataImpHelper();
   var currentPage = 0;
    ProfileModelRespose? ProfileModel;
@@ -40,30 +43,30 @@ class _CustomerDataState extends State<CustomerData> {
   List<Hotel1> searchList = [];
   List<String> keys = [];
 
-  void startRealTimeFirebase()async {
-await  mainprovider.buildFiirebase("hotel");
-    mainprovider.base.onChildAdded.listen((event) {
-      print(event.snapshot.key);
-      keys.add(event.snapshot.key!);
-      Hotel1 p=Hotel1.fromJson(event.snapshot.value);
-      customerDataProvider.addNewHotel(p);
-      searchList.add(p);
-      // setState(() {
-      // });
-    });
-    userData=mainprovider.database.reference().child("profiles").child(FirebaseAuth.instance.currentUser!.uid);
-    userData.onValue.listen((event) {
-     print(event.snapshot.value.toString());
-     ProfileModel=ProfileModelRespose.fromJson(event.snapshot.value);
-     print(ProfileModel?.name);
-
-     setState(() {
-      });
-   })
-       .onDone(() {
-   });
-
-  }
+//   void startRealTimeFirebase()async {
+// await  mainprovider.buildFiirebase("hotel");
+//     mainprovider.base.onChildAdded.listen((event) {
+//       print(event.snapshot.key);
+//       keys.add(event.snapshot.key!);
+//       Hotel1 p=Hotel1.fromJson(event.snapshot.value);
+//       customerDataProvider.addNewHotel(p);
+//       searchList.add(p);
+//       // setState(() {
+//       // });
+//     });
+//     userData=mainprovider.database.reference().child("profiles").child(FirebaseAuth.instance.currentUser!.uid);
+//     userData.onValue.listen((event) {
+//      print(event.snapshot.value.toString());
+//      ProfileModel=ProfileModelRespose.fromJson(event.snapshot.value);
+//      print(ProfileModel?.name);
+//
+//      setState(() {
+//       });
+//    })
+//        .onDone(() {
+//    });
+//
+//   }
 
   @override
   void initState() {
@@ -71,7 +74,7 @@ await  mainprovider.buildFiirebase("hotel");
     super.initState();
     mainprovider = Provider.of<Mainprovider>(myContext,listen: false);
     customerDataProvider = Provider.of<CustomerDataProvider>(myContext,listen: false);
-    startRealTimeFirebase();
+    customerDataProvider.startRealTimeFirebase();
     customerDataProvider.allHotels=[];
    // UploadUserData();
   }
@@ -208,7 +211,7 @@ await  mainprovider.buildFiirebase("hotel");
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          HotelDetialsScreen(hotles[(hotles.length - 1) - index],keys[(hotles.length - 1) - index]),
+                          HotelDetialsScreen(hotles[(hotles.length - 1) - index],customerDataProvider.keys[(hotles.length - 1) - index]),
                     ));
                   },
                   child: Padding(
@@ -261,7 +264,7 @@ await  mainprovider.buildFiirebase("hotel");
                                       initialRating:double.parse(hotles[(hotles.length - 1) - index].rate!.toString()),
                                       minRating: 1,
                                       unratedColor: Colors.grey,
-                                      itemSize: 30,
+                                      itemSize: 25.r,
                                       direction: Axis.horizontal,
                                       allowHalfRating: true,
                                       itemCount: 5,
@@ -394,6 +397,14 @@ await  mainprovider.buildFiirebase("hotel");
           case 1:
             //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(item.text)));
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CustomerData()));
+            break;
+          case 2:
+          //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(item.text)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HotelBooking()));
+            break;
+          case 3:
+          //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(item.text)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CompliantsScreen()));
             break;
         }
       },

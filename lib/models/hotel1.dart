@@ -5,26 +5,26 @@
 /// HotelAdress : "hgjh"
 /// HotelImage : "hgjh"
 /// HotelId : "ugudgccccjiok"
+/// rate : 0.0
 
 class Hotel1 {
-
   Hotel1({
       String? hotelName, 
       int? hotelStarsNo, 
       String? hotelGovernment, 
       String? hotelQueryPhone, 
       String? hotelAdress, 
-      String? hotelImage,
-    dynamic? rate,
-    String? hotelId,}){
+      String? hotelImage, 
+      String? hotelId, 
+      double? rate,}){
     _hotelName = hotelName;
     _hotelStarsNo = hotelStarsNo;
     _hotelGovernment = hotelGovernment;
     _hotelQueryPhone = hotelQueryPhone;
     _hotelAdress = hotelAdress;
     _hotelImage = hotelImage;
-    _rate = rate;
     _hotelId = hotelId;
+    _rate = rate;
 }
 
   Hotel1.fromJson(dynamic json) {
@@ -34,9 +34,8 @@ class Hotel1 {
     _hotelQueryPhone = json['HotelQueryPhone'];
     _hotelAdress = json['HotelAdress'];
     _hotelImage = json['HotelImage'];
-    _rate = json['rate'];
-
     _hotelId = json['HotelId'];
+    _rate = json['rate'];
   }
   String? _hotelName;
   int? _hotelStarsNo;
@@ -45,7 +44,7 @@ class Hotel1 {
   String? _hotelAdress;
   String? _hotelImage;
   String? _hotelId;
-  dynamic? _rate;
+  double? _rate;
 
   String? get hotelName => _hotelName;
   int? get hotelStarsNo => _hotelStarsNo;
@@ -54,11 +53,7 @@ class Hotel1 {
   String? get hotelAdress => _hotelAdress;
   String? get hotelImage => _hotelImage;
   String? get hotelId => _hotelId;
-  dynamic? get rate => _rate;
-
-  set hotelName(String? value) {
-    _hotelName = value;
-  }
+  double? get rate => _rate;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -68,36 +63,12 @@ class Hotel1 {
     map['HotelQueryPhone'] = _hotelQueryPhone;
     map['HotelAdress'] = _hotelAdress;
     map['HotelImage'] = _hotelImage;
-    map['rate'] = _rate;
     map['HotelId'] = _hotelId;
+    map['rate'] = _rate;
     return map;
   }
 
-  set hotelStarsNo(int? value) {
-    _hotelStarsNo = value;
-  }
-
-  set hotelGovernment(String? value) {
-    _hotelGovernment = value;
-  }
-
-  set hotelQueryPhone(String? value) {
-    _hotelQueryPhone = value;
-  }
-
-  set hotelAdress(String? value) {
-    _hotelAdress = value;
-  }
-
-  set hotelImage(String? value) {
-    _hotelImage = value;
-  }
-
-  set hotelId(String? value) {
-    _hotelId = value;
-  }
-
-  set rate(dynamic? value) {
+  set rate(double? value) {
     _rate = value;
   }
 }

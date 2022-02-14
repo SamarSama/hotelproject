@@ -1,12 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hotelproject/models/compliants.dart';
+import 'package:hotelproject/provoder/CompliantsProvider.dart';
 import 'package:hotelproject/provoder/add_room_provider.dart';
+import 'package:hotelproject/provoder/book_provider.dart';
+import 'package:hotelproject/provoder/booking_provider.dart';
 import 'package:hotelproject/provoder/customer_data_provider.dart';
 import 'package:hotelproject/provoder/hotel_detials_provider.dart';
 import 'package:hotelproject/provoder/hotel_login_provider.dart';
 import 'package:hotelproject/provoder/main_provider.dart';
 import 'package:hotelproject/provoder/open_provider.dart';
+import 'package:hotelproject/provoder/serviceprovider.dart';
 import 'package:hotelproject/ui/open.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +37,13 @@ void main() async {
       ChangeNotifierProvider(create: (context) => HotelLoginProvider(),),
       ChangeNotifierProvider(create: (context) => AddRoomProvider(),),
       ChangeNotifierProvider(create: (context) => HotelDetialsProvider(),),
+      ChangeNotifierProvider(create: (context) => BookingProvider(),),
+      ChangeNotifierProvider(create: (context) => CompliantsProvider(),),
+      ChangeNotifierProvider(create: (context) => ServiceProvider(),),
+      ChangeNotifierProvider(create: (context) => BookProvider(),),
+
+
+
 
 
     ],

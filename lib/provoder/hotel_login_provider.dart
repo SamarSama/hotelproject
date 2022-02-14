@@ -9,7 +9,6 @@ import 'package:hotelproject/ui/hotelareahome.dart';
 import 'package:hotelproject/utils/data/data_helper.dart';
 
 import 'hotel_detials_provider.dart';
-
 class HotelLoginProvider extends ChangeNotifier {
   late FirebaseDatabase database;
   late Mainprovider mainprovider;
@@ -19,18 +18,18 @@ class HotelLoginProvider extends ChangeNotifier {
   Future<void> HotelLogin (String hotelId,co)async{
     app  =  await Firebase.initializeApp();
     database = FirebaseDatabase(app: app);
-    Hoteldata=database.reference().child("hotel");
-    Query t=Hoteldata.orderByChild("HotelId").equalTo(hotelId);
-    t.onValue.listen((event) {
+    Hoteldata=database.reference().child("hotel").child(hotelId);
+    Hoteldata.onValue.listen((event) {
       print(event.snapshot.value.toString());
       if(event.snapshot.value !=null){
         cacheDataImpHelper.setUserType(DataHelper.HOTEL_TYPE);
         cacheDataImpHelper.setHotelCode(hotelId);
         print(hotelId);
         Navigator.of(co).pushReplacement(MaterialPageRoute(builder: (context) => HotelAreaHome( text: hotelId,)));
-      }else{
-        print("not exist");
       }
+      else{
+        ScaffoldMessenger.of(co)
+            .showSnackBar(SnackBar(content: Text("Seiral number nit right ")));      }
     });
 
   }

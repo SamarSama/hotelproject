@@ -56,9 +56,8 @@ class OpenProvider extends ChangeNotifier{
         else{
           app  =  await Firebase.initializeApp();
           database = FirebaseDatabase(app: app);
-          Hoteldata=database.reference().child("hotel");
-          Query t=Hoteldata.orderByChild("HotelId").equalTo(Hotelcode);
-          t.onValue.listen((event) {
+          Hoteldata=database.reference().child("hotel").child(Hotelcode);
+          Hoteldata.onValue.listen((event) {
             cacheDataImpHelper.setUserType(DataHelper.HOTEL_TYPE);
             cacheDataImpHelper.setHotelCode(Hotelcode);
             print(Hotelcode);

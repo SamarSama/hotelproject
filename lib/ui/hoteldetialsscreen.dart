@@ -17,17 +17,13 @@ import 'package:provider/provider.dart';
 class HotelDetialsScreen extends StatefulWidget {
   final Hotel1 allHotel;
   final keyHotel;
-
   const HotelDetialsScreen(this.allHotel, this.keyHotel, {Key? key})
       : super(key: key);
-
   @override
   _HotelDetialsScreenState createState() => _HotelDetialsScreenState();
 }
-
 class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
   List<RateModel> rate = [];
-
   late HotelDetialsProvider hotelDetialsProvider;
   late FirebaseDatabase database;
   late FirebaseApp app;
@@ -38,7 +34,6 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
   List<Room> allrooms = [];
   late RateModel rateModel;
   late Mainprovider mainprovider;
-
   void CalculateHotelRate() async {
     app = await Firebase.initializeApp();
     database = FirebaseDatabase(app: app);
@@ -63,16 +58,6 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
       Hotel1 hotel = widget.allHotel;
       hotel.rate = avg;
       base2.child(widget.keyHotel!).set(hotel.toJson());
-
-      // for( var snap in event.snapshot.)
-      //   {
-      //     print(snap.toString());
-      //   }
-      // rateModel=RateModel.fromJson(event.snapshot.value);
-      // print("7777777");
-      // print(rateModel.rate);
-      // setState(() {
-      // });
     });
 
   }
@@ -253,7 +238,7 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
                               child: Image.network(
 
                                 e.roomImage!,
-                                width: 300.w,
+                                width: 350.w,
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -263,7 +248,7 @@ class _HotelDetialsScreenState extends State<HotelDetialsScreen> {
                       ],
                       options: CarouselOptions(
                           autoPlay: true,
-                          height: 400.h,
+                          height: 300.h,
                           autoPlayInterval: Duration(seconds: 4),
                           pauseAutoPlayOnTouch: true,
                           viewportFraction: 0.50,
